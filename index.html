@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobile Home for Sale — Card Gallery</title>
+  <style>
+    :root {
+      --paper: #faf6f0;
+      --paper-dark: #f0ebe3;
+      --white: #ffffff;
+      --pine: #2c1810;
+      --pine-light: #4a3228;
+      --pine-muted: #6b5244;
+      --oak: #b8956a;
+      --oak-light: #d4c4a8;
+      --oak-border: #e2d6c4;
+      --sage: #7a9e7e;
+      --sage-light: #dceee0;
+      --sage-muted: #a8c5ab;
+      --grey-warm: #8b7d6b;
+      --grey-light: #c9bfad;
+      --radius: 6px;
+      --shadow: 0 1px 3px rgba(44,24,16,0.06), 0 1px 2px rgba(44,24,16,0.04);
+      --shadow-lg: 0 8px 24px rgba(44,24,16,0.1), 0 2px 6px rgba(44,24,16,0.05);
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: var(--paper);
+      color: var(--pine);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--sage); }
+    a:hover { color: var(--pine-muted); }
+
+    /* ===== TOP BAR ===== */
+    .topbar {
+      background: rgba(250, 246, 240, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--oak-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .topbar-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .topbar-brand {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--pine);
+    }
+    .topbar-badge {
+      background: var(--sage-light);
+      color: var(--sage);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-family: -apple-system, sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: var(--paper);
+      border-bottom: 1px solid var(--oak-border);
+    }
+    .hero-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 44px 24px 40px;
+    }
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+    .hero .location {
+      color: var(--grey-warm);
+      font-style: italic;
+      font-size: 1rem;
+      margin-top: 6px;
+    }
+    .hero-price {
+      font-size: clamp(1.4rem, 3vw, 1.8rem);
+      font-weight: 700;
+      white-space: nowrap;
+      color: var(--pine);
+    }
+
+    .quick-specs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--oak-border);
+    }
+    .qs { text-align: center; }
+    .qs .val {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--pine);
+    }
+    .qs .label {
+      font-family: -apple-system, sans-serif;
+      font-size: 0.7rem;
+      color: var(--grey-warm);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* ===== CONTAINER ===== */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 24px 60px;
+    }
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 400;
+      margin-bottom: 24px;
+      padding-left: 4px;
+      color: var(--pine);
+    }
+
+    /* ===== CARDS GRID ===== */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .room-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--oak-border);
+      box-shadow: var(--shadow);
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+    .room-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+
+    /* Card header */
+    .card-header {
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--oak-border);
+    }
+    .card-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-icon {
+      width: 4px;
+      height: 24px;
+      background: var(--oak);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--pine);
+    }
+    .card-count {
+      font-family: -apple-system, sans-serif;
+      font-size: 0.75rem;
+      color: var(--grey-warm);
+      background: var(--paper-dark);
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+
+    /* Card preview */
+    .card-preview {
+      position: relative;
+      height: 220px;
+      overflow: hidden;
+      background: var(--paper-dark);
+    }
+    .card-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .room-card:hover .card-preview img {
+      transform: scale(1.03);
+    }
+    .card-preview-overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 24px 16px 12px;
+      background: linear-gradient(transparent, rgba(44,24,16,0.55));
+      display: flex;
+      justify-content: flex-end;
+    }
+    .card-preview-overlay span {
+      color: white;
+      font-family: -apple-system, sans-serif;
+      font-size: 0.7rem;
+      background: rgba(44,24,16,0.3);
+      backdrop-filter: blur(4px);
+      padding: 3px 10px;
+      border-radius: 6px;
+      letter-spacing: 0.02em;
+    }
+
+    /* Card expand button */
+    .card-expand {
+      width: 100%;
+      padding: 12px;
+      background: none;
+      border: none;
+      border-top: 1px solid var(--oak-border);
+      color: var(--sage);
+      font-family: -apple-system, sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .card-expand:hover {
+      background: var(--paper-dark);
+      color: var(--pine-muted);
+    }
+    .card-expand .arrow {
+      transition: transform var(--transition);
+      display: inline-block;
+    }
+    .room-card.expanded .card-expand .arrow {
+      transform: rotate(180deg);
+    }
+
+    /* Card expanded photos */
+    .card-photos {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .room-card.expanded .card-photos {
+      max-height: 800px;
+    }
+    .card-photos-inner {
+      padding: 12px 16px 16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 8px;
+    }
+    .card-photos-inner img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 4px;
+      border: 1px solid var(--oak-border);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card-photos-inner img:hover {
+      transform: scale(1.04);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* ===== CONTACT ===== */
+    .contact-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px 60px;
+    }
+    .contact-card {
+      background: var(--white);
+      border: 1px solid var(--oak-border);
+      border-radius: var(--radius);
+      padding: 36px 24px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .contact-card h3 {
+      font-size: 1.3rem;
+      font-weight: 400;
+      margin-bottom: 8px;
+    }
+    .contact-card p {
+      color: var(--grey-warm);
+      margin-bottom: 4px;
+      font-size: 0.95rem;
+    }
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    .contact-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 24px;
+      background: var(--pine);
+      color: var(--paper);
+      border-radius: var(--radius);
+      font-family: -apple-system, sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: background var(--transition), transform 0.15s;
+    }
+    .contact-link:hover {
+      background: var(--pine-light);
+      text-decoration: none;
+      transform: translateY(-1px);
+      color: var(--paper);
+    }
+    .contact-note {
+      font-size: 0.8rem;
+      color: var(--grey-warm);
+      margin-top: 16px;
+      font-style: italic;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: var(--grey-light);
+      font-family: -apple-system, sans-serif;
+      font-size: 0.75rem;
+      border-top: 1px solid var(--oak-border);
+      background: var(--paper-dark);
+    }
+
+    /* ===== LIGHTBOX ===== */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 12, 8, 0.95);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .lightbox.active { display: flex; }
+    .lightbox img {
+      max-width: 95vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 2px;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 12px; right: 16px;
+      color: rgba(255,255,255,0.8);
+      font-size: 2.5rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+    .lightbox-close:hover { color: white; }
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255,255,255,0.7);
+      font-size: 2rem;
+      cursor: pointer;
+      background: rgba(255,255,255,0.06);
+      border: none;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .lightbox-nav:hover { background: rgba(255,255,255,0.12); color: white; }
+    .lightbox-prev { left: 12px; }
+    .lightbox-next { right: 12px; }
+    .lightbox-info {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.5);
+      font-family: -apple-system, sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.02em;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .hero-inner { padding: 28px 16px 24px; }
+      .cards-grid { grid-template-columns: 1fr; }
+      .container { padding: 24px 12px 40px; }
+      .contact-section { padding: 0 12px 40px; }
+      .contact-card { padding: 24px 16px; }
+      .contact-links { flex-direction: column; align-items: center; }
+      .card-photos-inner { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .quick-specs { gap: 12px; }
+      .card-preview { height: 180px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="topbar-inner">
+      <span class="topbar-brand">Mobile Home for Sale</span>
+      <span class="topbar-badge">Available</span>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-top">
+        <div>
+          <h1>Mobile Home for Sale</h1>
+          <p class="location">Unit 2 – 13 Elmgrove Dr, Otterburne, MB, R0A 1G0</p>
+        </div>
+        <div class="hero-price">$80,000</div>
+      </div>
+      <div class="quick-specs">
+        <div class="qs"><div class="val">14 × 70</div><div class="label">Size</div></div>
+        <div class="qs"><div class="val">3</div><div class="label">Bedrooms</div></div>
+        <div class="qs"><div class="val">1</div><div class="label">Full Bath</div></div>
+        <div class="qs"><div class="val">1987</div><div class="label">Year</div></div>
+        <div class="qs"><div class="val">Single</div><div class="label">+ Addition</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2 class="section-title">Browse by Room</h2>
+    <div class="cards-grid" id="cardsGrid"></div>
+  </div>
+
+  <div class="contact-section">
+    <div class="contact-card">
+      <h3>Schedule a Viewing</h3>
+      <p>Unit 2 – 13 Elmgrove Dr, Otterburne, MB, R0A 1G0</p>
+      <p>Contact <a href="https://www.prov.ca/">Providence University College</a> to arrange a showing</p>
+      <div class="contact-links">
+        <a class="contact-link" href="mailto:email@example.com">✉ &nbsp;Email</a>
+        <a class="contact-link" href="tel:+15551234567">✆ &nbsp;Call</a>
+      </div>
+      <p class="contact-note">All buyers must be approved by Providence University College before purchase.</p>
+    </div>
+  </div>
+
+  <footer>&copy; 2026 — Mobile Home for Sale</footer>
+
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+    <button class="lightbox-nav lightbox-prev" onclick="navigateLightbox(-1)">&#8249;</button>
+    <img id="lightboxImg" src="" alt="">
+    <button class="lightbox-nav lightbox-next" onclick="navigateLightbox(1)">&#8250;</button>
+    <div class="lightbox-info" id="lightboxInfo"></div>
+  </div>
+
+  <script>
+    const rooms = [
+      { id: "outside",      name: "Exterior",      photos: ["20260707_160902.jpg", "20260707_161037.jpg"] },
+      { id: "entrance",     name: "Entrance",      photos: ["20260707_152808.jpg", "20260707_152820.jpg"] },
+      { id: "living_room",  name: "Living Room",   photos: ["20260707_152915.jpg", "20260707_154345.jpg"] },
+      { id: "kitchen",      name: "Kitchen",       photos: ["20260707_152942.jpg", "20260707_154532.jpg"] },
+      { id: "hallway",      name: "Hallway",       photos: ["20260707_153148.jpg", "20260707_154233.jpg"] },
+      { id: "bedroom_master", name: "Master Bedroom", photos: ["20260707_153231.jpg", "20260707_153305.jpg"] },
+      { id: "bedroom_1",    name: "Bedroom 2",     photos: ["20260707_153035.jpg", "20260707_153044.jpg"] },
+      { id: "bedroom_2",    name: "Bedroom 3",     photos: ["20260707_153105.jpg", "20260707_153116.jpg"] },
+      { id: "bathroom",     name: "Bathroom",      photos: ["20260707_153624.jpg", "20260707_153629.jpg", "20260707_153647.jpg", "20260707_153923.jpg", "20260707_153944.jpg", "20260707_154006.jpg"] }
+    ];
+
+    const grid = document.getElementById('cardsGrid');
+    rooms.forEach(room => {
+      const card = document.createElement('div');
+      card.className = 'room-card';
+      let photosHTML = '';
+      room.photos.forEach((file, pi) => {
+        photosHTML += `<img src="pics/${room.id}/thumbs/${file}" onclick="openLightbox('${room.id}', ${pi})" alt="${room.name} photo ${pi+1}">`;
+      });
+      card.innerHTML = `
+        <div class="card-header">
+          <div class="card-header-left">
+            <div class="card-icon"></div>
+            <span class="card-title">${room.name}</span>
+          </div>
+          <span class="card-count">${room.photos.length} photo${room.photos.length > 1 ? 's' : ''}</span>
+        </div>
+        <div class="card-preview">
+          <img src="pics/${room.id}/thumbs/${room.photos[0]}" alt="${room.name}">
+          <div class="card-preview-overlay"><span>${room.photos.length} photo${room.photos.length > 1 ? 's' : ''}</span></div>
+        </div>
+        <button class="card-expand" onclick="toggleCard(this)">View all photos <span class="arrow">▾</span></button>
+        <div class="card-photos"><div class="card-photos-inner">${photosHTML}</div></div>`;
+      grid.appendChild(card);
+    });
+
+    function toggleCard(btn) { btn.closest('.room-card').classList.toggle('expanded'); }
+
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxInfo = document.getElementById('lightboxInfo');
+    let cr = null, ci = 0;
+
+    function openLightbox(rid, pi) {
+      cr = rooms.find(r => r.id === rid);
+      ci = pi;
+      update();
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    function navigateLightbox(d) {
+      if (!cr) return;
+      ci = (ci + d + cr.photos.length) % cr.photos.length;
+      update();
+    }
+    function update() {
+      if (!cr) return;
+      lightboxImg.src = `pics/${cr.id}/web/${cr.photos[ci]}`;
+      lightboxInfo.textContent = `${cr.name} — ${ci + 1} / ${cr.photos.length}`;
+    }
+    lightbox.onclick = e => { if (e.target === lightbox) closeLightbox(); };
+    document.addEventListener('keydown', e => {
+      if (!lightbox.classList.contains('active')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') navigateLightbox(-1);
+      if (e.key === 'ArrowRight') navigateLightbox(1);
+    });
+  </script>
+
+</body>
+</html>
